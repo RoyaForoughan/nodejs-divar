@@ -2,6 +2,8 @@ const autoBind = require("auto-bind")
 const { AuthMessage } = require("./auth.message")
 const authService = require("./auth.service")
 const {StatusCodes : HttpStatus} = require('http-status-codes');
+const CookieNames = require("../../common/constant/cookie.enum");
+const NodeEnv = require("../../common/constant/env.enum");
 
 class AuthController{
     #service
@@ -24,13 +26,16 @@ class AuthController{
         try {
             const {mobile , code} = req.body
             const token =await this.#service.checkOtp(mobile , code)
-            res.status(HttpStatus.OK).json({
+            return res.cookie(CookieNames.Access_Token , token , {
+                httpOnly:true , 
+                secure:process.env.NODE_ENV = NodeEnv.Production
+            }).status(HttpStatus.OK).json({
                 statusCode : HttpStatus.OK,
                 data:{
-                    message: AuthMessage.LoginSuccessfully,
-                    token
+                    message: AuthMessage.LoginSuccessfully
                 }
             })
+            
 
         } catch (error) {
             next(error)
