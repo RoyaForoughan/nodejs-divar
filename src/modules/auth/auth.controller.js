@@ -43,7 +43,9 @@ class AuthController{
     }
     async logOut(req,res,next){
         try {
-            
+            return res.clearCookie(CookieNames.Access_Token).status(HttpStatus.OK).json({
+                message : AuthMessage.LogoutSuccefully
+            })
         } catch (error) {
             
         }
