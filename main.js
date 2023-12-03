@@ -13,8 +13,8 @@ async function main(){
     app.use(express.json())
     app.use(express.urlencoded({extended:true}))
     app.use(cookieParser(process.env.COOKIE_SECRET_KEY))
-   // SwaggerConfig(app)
-   app.use(mainRouter)
+    app.use(mainRouter)
+    SwaggerConfig(app)
     NotFoundHandler(app)
     AllExceptionHandler(app)
     app.listen(port , ()=>{
