@@ -1,7 +1,7 @@
 const autoBind = require("auto-bind")
 const { AuthMessage } = require("./auth.message")
 const authService = require("./auth.service")
-
+const {StatusCodes : HttpStatus} = require('http-status-codes');
 
 class AuthController{
     #service
@@ -12,7 +12,7 @@ class AuthController{
     async sendOTP(req,res,next){
         try {
             const {mobile} = req.body
-            const result =await this.#service.sendOtp(mobile)
+            await this.#service.sendOtp(mobile)
             return res.json({
                 message : AuthMessage.SendOtpSuccessfully
             }) 
@@ -22,9 +22,18 @@ class AuthController{
     }
     async checkOTP(req,res,next){
         try {
-            
+            const {mobile , code} = req.body
+            const token =await this.#service.checkOtp(mobile , code)
+            res.status(HttpStatus.OK).json({
+                statusCode : HttpStatus.OK,
+                data:{
+                    message: AuthMessage.LoginSuccessfully,
+                    token
+                }
+            })
+
         } catch (error) {
-            
+            next(error)
         }
     }
     async logOut(req,res,next){
